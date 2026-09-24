@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TaskNest — Task Manager</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <h1>TaskNest</h1>
+                    <span>Stay organized</span>
+                </div>
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <p class="nav-title">WORKSPACE</p>
+
+                <button class="nav-item active" data-view="all">
+                    <span class="nav-icon">▦</span>
+                    <span>All Tasks</span>
+                    <span class="nav-count" id="allCount">0</span>
+                </button>
+
+                <button class="nav-item" data-view="pending">
+                    <span class="nav-icon">◷</span>
+                    <span>Pending</span>
+                    <span class="nav-count" id="pendingCount">0</span>
+                </button>
+
+                <button class="nav-item" data-view="completed">
+                    <span class="nav-icon">✓</span>
+                    <span>Completed</span>
+                    <span class="nav-count" id="completedCount">0</span>
+                </button>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="product-card">
+
+                    <div class="product-icon">
+                        ✦
+                    </div>
+
+                    <div>
+                        <strong>TaskNest</strong>
+                        <p>Your productivity space</p>
+                    </div>
+
+                </div>
+
+                <div class="sidebar-footer">
+                    <span>TaskNest</span>
+                    <span>v1.0</span>
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+
+            <header class="topbar">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">✓</div>
+                    <strong>TaskNest</strong>
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        API Connected
+                    </div>
+
+                    <button class="refresh-btn" id="refreshBtn">
+                        ↻
+                    </button>
+
+                    <button class="add-task-btn" id="openAddModal">
+                        <span>+</span>
+                        Add Task
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= PAGE HEADER ================= -->
+
+            <section class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR WORKSPACE
+                    </p>
+
+                    <h2 id="pageTitle">
+                        Good to see you.
+                    </h2>
+
+                    <p class="page-subtitle">
+                        Manage your tasks and keep your day on track.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= STATS ================= -->
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+                        <span class="stat-label">Total Tasks</span>
+
+                        <div class="stat-icon purple">
+                            ▦
+                        </div>
+                    </div>
+
+                    <div class="stat-number" id="totalTasks">
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        All tasks in your workspace
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+                        <span class="stat-label">Pending</span>
+
+                        <div class="stat-icon orange">
+                            ◷
+                        </div>
+                    </div>
+
+                    <div class="stat-number" id="pendingTasks">
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Tasks waiting for you
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+                        <span class="stat-label">Completed</span>
+
+                        <div class="stat-icon green">
+                            ✓
+                        </div>
+                    </div>
+
+                    <div class="stat-number" id="completedTasks">
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Tasks you've finished
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+                        <span class="stat-label">Progress</span>
+
+                        <div class="stat-icon blue">
+                            %
+                        </div>
+                    </div>
+
+                    <div class="stat-number">
+                        <span id="progressPercent">0</span>%
+                    </div>
+
+                    <div class="progress-container">
+
+                        <div
+                            class="progress-bar"
+                            id="progressBar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= TASK SECTION ================= -->
+
+            <section class="tasks-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h3 id="sectionTitle">
+                            All Tasks
+                        </h3>
+
+                        <p id="taskSubtitle">
+                            Keep everything organized in one place.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FILTERS -->
+
+                <div class="toolbar">
+
+                    <div class="search-wrapper">
+
+                        <span class="search-icon">
+                            ⌕
+                        </span>
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search tasks..."
+                        >
+
+                    </div>
+
+
+                    <select id="priorityFilter">
+
+                        <option value="">
+                            All priorities
+                        </option>
+
+                        <option value="High">
+                            High priority
+                        </option>
+
+                        <option value="Medium">
+                            Medium priority
+                        </option>
+
+                        <option value="Low">
+                            Low priority
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- LOADING -->
+
+                <div
+                    class="loading-state"
+                    id="loadingState"
+                >
+
+                    <div class="spinner"></div>
+
+                    <p>Loading your tasks...</p>
+
+                </div>
+
+
+                <!-- ERROR -->
+
+                <div
+                    class="error-state hidden"
+                    id="errorState"
+                >
+
+                    <div class="error-icon">
+                        !
+                    </div>
+
+                    <h3>Something went wrong</h3>
+
+                    <p id="errorMessage">
+                        Unable to connect to TaskNest API.
+                    </p>
+
+                    <button
+                        class="retry-btn"
+                        id="retryBtn"
+                    >
+                        Try Again
+                    </button>
+
+                </div>
+
+
+                <!-- EMPTY -->
+
+                <div
+                    class="empty-state hidden"
+                    id="emptyState"
+                >
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
+                    <h3>No tasks found</h3>
+
+                    <p>
+                        Create a task to get started.
+                    </p>
+
+                    <button
+                        class="add-task-btn"
+                        id="emptyAddBtn"
+                    >
+                        + Add Task
+                    </button>
+
+                </div>
+
+
+                <!-- TASK GRID -->
+
+                <div
+                    class="task-grid"
+                    id="taskGrid"
+                ></div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= ADD / EDIT MODAL ================= -->
+
+    <div
+        class="modal-overlay hidden"
+        id="modalOverlay"
+    >
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        TASK
+                    </p>
+
+                    <h3 id="modalTitle">
+                        Create a new task
+                    </h3>
+
+                </div>
+
+                <button
+                    class="close-modal"
+                    id="closeModal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="taskForm">
+
+                <div class="form-group">
+
+                    <label for="taskTitle">
+                        Task title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskTitle"
+                        placeholder="e.g. Complete DBMS assignment"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="taskDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="taskDescription"
+                        rows="4"
+                        placeholder="Add some details about this task..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="taskPriority">
+                            Priority
+                        </label>
+
+                        <select id="taskPriority" required>
+
+                            <option value="High">
+                                High
+                            </option>
+
+                            <option value="Medium" selected>
+                                Medium
+                            </option>
+
+                            <option value="Low">
+                                Low
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="taskStatus">
+                            Status
+                        </label>
+
+                        <select id="taskStatus" required>
+
+                            <option value="Pending" selected>
+                                Pending
+                            </option>
+
+                            <option value="Completed">
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        id="cancelModal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                        id="submitTaskBtn"
+                    >
+                        Create Task
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TOAST ================= -->
+
+    <div
+        class="toast hidden"
+        id="toast"
+    >
+
+        <div class="toast-icon">
+            ✓
+        </div>
+
+        <div>
+
+            <strong id="toastTitle">
+                Success
+            </strong>
+
+            <p id="toastMessage">
+                Task created successfully.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
